@@ -1,0 +1,65 @@
+#!/bin/bash
+#
+#################
+# BUILD QUDA
+#################
+source ./env.sh
+
+pushd  ${BUILDDIR}
+if [ -d build_quda_qdpjit_double ]; 
+then 
+#  rm -rf ./build_quda_qdpjit_double
+  sleep 1
+fi
+mkdir -p ./build_quda_qdpjit_double
+pushd ./build_quda_qdpjit_double
+
+cmake  \
+	-DQUDA_DIRAC_CLOVER=ON \
+	-DQUDA_DIRAC_DOMAIN_WALL=OFF \
+	-DQUDA_DIRAC_NDEG_TWISTED_MASS=OFF \
+	-DQUDA_DIRAC_STAGGERED=OFF \
+	-DQUDA_DIRAC_TWISTED_MASS=ON \
+	-DQUDA_DIRAC_TWISTED_CLOVER=ON \
+	-DQUDA_DIRAC_CLOVER_HASENBUSCH_TWIST=ON \
+	-DQUDA_DIRAC_WILSON=ON \
+	-DQUDA_DYNAMIC_CLOVER=OFF \
+	-DQUDA_FORCE_GAUGE=OFF \
+	-DQUDA_FORCE_HISQ=OFF \
+	-DQUDA_GAUGE_ALG=OFF \
+	-DQUDA_GAUGE_TOOLS=OFF \
+	-DQUDA_GPU_ARCH=${SM} \
+	-DQUDA_INTERFACE_QDPJIT=ON \
+	-DQUDA_QDPJIT=ON \
+	-DQUDA_QDPJITHOME=${INSTALLDIR}/qdpjit/qdpjit-double-llvm13 \
+	-DQDPXX_DIR=${INSTALLDIR}/qdpjit/qdpjit-double-llvm13/lib/cmake/QDPXX \
+	-DLLVM_DIR=${INSTALLDIR}/llvm/13.0.0/lib/cmake/llvm \
+	-DQUDA_INTERFACE_MILC=OFF \
+	-DQUDA_INTERFACE_CPS=OFF \
+	-DQUDA_INTERFACE_QDP=ON \
+	-DQUDA_INTERFACE_TIFR=OFF \
+	-DQUDA_MAGMA=OFF	\
+	-DQUDA_QMP=ON \
+	-DQMP_DIR=${INSTALLDIR}/qmp/qmp-2.5.4-openmpi/lib/cmake/QMP \
+    -DQUDA_QIO=ON \
+	-DQIO_DIR=${INSTALLDIR}/qdpjit/qdpjit-double-llvm13/lib/cmake/QIO \
+	-DQUDA_MULTIGRID=ON \
+    -DQUDA_MAX_MULTI_BLAS_N=9 \
+    -DQUDA_DOWNLOAD_EIGEN=NO \
+    -DEIGEN_INCLUDE_DIR=${SRCDIR}/eigen-3.4.0 \
+	-DCMAKE_INSTALL_PREFIX=${INSTALLDIR}/quda/quda-qdpjit \
+	-DCMAKE_BUILD_TYPE="DEVEL" \
+    -DCMAKE_CXX_COMPILER=${PK_CXX} \
+	-DCMAKE_CXX_FLAGS="-O3 -fPIC" \
+    -DCMAKE_C_COMPILER=${PK_CC} \
+    -DCMAKE_LINKER=${PK_CXX} \
+	-DQUDA_BUILD_SHAREDLIB=ON \
+	-DQUDA_BUILD_ALL_TESTS=ON \
+	-DCMAKE_EXE_LINKER_FLAGS="-L ${INSTALLDIR}/llvm/13.0.0/lib" \
+	${SRCDIR}/quda
+
+${MAKE} VERBOSE=1
+${MAKE} install
+popd
+
+popd

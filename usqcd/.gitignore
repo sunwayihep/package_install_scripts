@@ -1,0 +1,7 @@
+src/
+!src/get_source.sh
+openmpi/build
+openmpi/install
+chroma-gpu-double/build
+chroma-gpu-double/install
+
