@@ -13,3 +13,15 @@
 
 *Note*: if the module system is not available, set up the `PATH`, `LD_LIBRARY_PATH`, `C_INCLUDE_PATH`, `CPLUS_INCLUDE_PATH`
 for every dependencies packages
+
+#### Issues
+---
+- "libquda.so: undefined reference to `QDP::QDP_get_global_cache()`" when compile `QUDA`, try to modify the `lib/CMakeLists.txt`
+file of `QUDA` from lines of 
+```
+# target_link_libraries(quda PRIVATE QDPXX::qdp)
+```
+into
+```
+target_link_libraries(quda PRIVATE QDPXX::qdp QDPXX::jit)
+```
