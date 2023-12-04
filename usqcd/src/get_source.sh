@@ -33,3 +33,5 @@ git clone --recursive git@github.com:lattice/quda.git
 # Chroma
 git clone --recursive --branch devel git@github.com:JeffersonLab/chroma.git
 
+# chromaxx
+git clone --branch devel git@github.com:IHEP-LQCD/chromaxx.git
